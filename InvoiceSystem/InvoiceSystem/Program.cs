@@ -47,8 +47,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseMiddleware<InvoicingSystem.Middleware.AuthMiddleware>();
-app.UseAuthorization();
+app.UseMiddleware<InvoicingSystem.Middleware.AuthMiddleware>(); 
 app.MapControllers();
 
 app.Run();

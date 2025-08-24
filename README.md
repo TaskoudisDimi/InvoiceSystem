@@ -7,7 +7,6 @@
 
 ## Endpoints
 - POST /invoice: Create a new invoice (Authorization: Bearer demo-token-compA).
-  - Body: JSON `Invoice` object.
 - GET /invoice/sent?counter_party_company=compB&date_issued=2025-08-21T00:00:00Z&invoice_id=inv1
 - GET /invoice/received?counter_party_company=compA&date_issued=2025-08-21T00:00:00Z&invoice_id=inv1
 
@@ -22,4 +21,16 @@
 - Run: `docker run -d -p 8080:80 invoicing-system`
 
 ## Notes
-- Hardcoded auth token (`demo-token-compA`) for demo purposes.
+- Hardcoded auth token (`Bearer demo-token-compA`) for demo purposes.
+- Create a new invoice (Authorization: Bearer demo-token-compA) with the folowwing body:
+  - Body: JSON `Invoice` object: 
+    {
+      "invoiceId": "inv2",
+      "dateIssued": "2025-08-25T11:18:00Z",
+      "netAmount": 150.0,
+      "vatAmount": 30.0,
+      "totalAmount": 180.0,
+      "description": "Consulting Services",
+      "companyId": "compA",
+      "counterPartyCompanyId": "compB"
+    }

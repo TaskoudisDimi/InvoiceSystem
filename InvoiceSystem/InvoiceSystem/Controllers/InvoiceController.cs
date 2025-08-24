@@ -31,14 +31,14 @@ public class InvoiceController : ControllerBase
         }
         catch (InvalidOperationException ex)
         {
-            return BadRequest(ex.Message); 
+            return BadRequest(ex.Message);
         }
     }
 
     [HttpGet("sent")]
     public IActionResult GetSentInvoices([FromQuery] string? counter_party_company, [FromQuery] string? date_issued, [FromQuery] string? invoice_id)
     {
-        var companyId = HttpContext.Items["CompanyId"]?.ToString() ?? "compA"; // we pass a default value of companyId
+        var companyId = HttpContext.Items["CompanyId"]?.ToString() ?? "compA"; // Default to compA if unauthenticated
         var invoices = _dataService.GetSentInvoices(companyId, counter_party_company, date_issued, invoice_id);
         return Ok(invoices);
     }
@@ -46,7 +46,7 @@ public class InvoiceController : ControllerBase
     [HttpGet("received")]
     public IActionResult GetReceivedInvoices([FromQuery] string? counter_party_company, [FromQuery] string? date_issued, [FromQuery] string? invoice_id)
     {
-        var companyId = HttpContext.Items["CompanyId"]?.ToString() ?? "compA"; // we pass a default value of companyId
+        var companyId = HttpContext.Items["CompanyId"]?.ToString() ?? "compA"; // Default to compA if unauthenticated
         var invoices = _dataService.GetReceivedInvoices(companyId, counter_party_company, date_issued, invoice_id);
         return Ok(invoices);
     }

@@ -19,7 +19,6 @@ public class InMemoryDataService : IDataService
 
     public void AddInvoice(Invoice invoice)
     {
-        // Prevent duplicates based on InvoiceId
         if (_invoices.Any(i => i.InvoiceId == invoice.InvoiceId))
         {
             throw new InvalidOperationException($"Invoice with ID '{invoice.InvoiceId}' already exists.");
@@ -29,7 +28,6 @@ public class InMemoryDataService : IDataService
 
     public IEnumerable<Invoice> GetSentInvoices(string companyId, string? counterParty = null, string? dateIssued = null, string? invoiceId = null)
     {
-        if (string.IsNullOrEmpty(companyId)) throw new ArgumentNullException(nameof(companyId), "Company ID cannot be null or empty.");
         var query = _invoices.Where(i => i.CompanyId == companyId);
         if (!string.IsNullOrEmpty(counterParty)) query = query.Where(i => i.CounterPartyCompanyId == counterParty);
         if (!string.IsNullOrEmpty(dateIssued)) query = query.Where(i => i.DateIssued == dateIssued);
@@ -39,7 +37,6 @@ public class InMemoryDataService : IDataService
 
     public IEnumerable<Invoice> GetReceivedInvoices(string companyId, string? counterParty = null, string? dateIssued = null, string? invoiceId = null)
     {
-        if (string.IsNullOrEmpty(companyId)) throw new ArgumentNullException(nameof(companyId), "Company ID cannot be null or empty.");
         var query = _invoices.Where(i => i.CounterPartyCompanyId == companyId);
         if (!string.IsNullOrEmpty(counterParty)) query = query.Where(i => i.CompanyId == counterParty);
         if (!string.IsNullOrEmpty(dateIssued)) query = query.Where(i => i.DateIssued == dateIssued);
@@ -49,7 +46,6 @@ public class InMemoryDataService : IDataService
 
     public void SeedData()
     {
-        // we use some data to simulate the process
         var companyA = new Company { Id = "compA", Name = "Company A", Users = new List<string> { "user1" } };
         var companyB = new Company { Id = "compB", Name = "Company B", Users = new List<string> { "user2" } };
         AddCompany(companyA);
@@ -65,6 +61,17 @@ public class InMemoryDataService : IDataService
             Description = "Service",
             CompanyId = "compA",
             CounterPartyCompanyId = "compB"
+        });
+        AddInvoice(new Invoice
+        {
+            InvoiceId = "inv2",
+            DateIssued = "2025-08-22T00:00:00Z",
+            NetAmount = 200,
+            VatAmount = 40,
+            TotalAmount = 240,
+            Description = "Service from compB",
+            CompanyId = "compB",
+            CounterPartyCompanyId = "compA"
         });
     }
 }

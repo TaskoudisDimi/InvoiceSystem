@@ -15,10 +15,21 @@ public class AuthMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
-        // Only set CompanyId if token is valid; otherwise, proceed without it
-        if (context.Request.Headers.TryGetValue("Authorization", out var token) && token == "Bearer demo-token-compA")
+        // Check and process Authorization header
+        if (context.Request.Headers.TryGetValue("Authorization", out var tokenValues) && tokenValues.Count > 0)
         {
-            context.Items["CompanyId"] = "compA";
+            var token = tokenValues[0]?.Trim();
+            if (token != null)
+            {
+                if (token.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+                {
+                    var tokenValue = token["Bearer ".Length..].Trim();
+                    if (tokenValue == "demo-token-compA")
+                    {
+                        context.Items["CompanyId"] = "compA";
+                    }
+                }
+            }
         }
         await _next(context);
     }
