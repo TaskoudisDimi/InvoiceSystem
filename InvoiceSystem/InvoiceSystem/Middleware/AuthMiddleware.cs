@@ -1,13 +1,13 @@
-﻿using InvoiceSystem;
+﻿using InvoicingSystem.Services;
 
 namespace InvoicingSystem.Middleware;
 
 public class AuthMiddleware
 {
     private readonly RequestDelegate _next;
-    private readonly InMemoryDataService _dataService;
+    private readonly IDataService _dataService;
 
-    public AuthMiddleware(RequestDelegate next, InMemoryDataService dataService)
+    public AuthMiddleware(RequestDelegate next, IDataService dataService)
     {
         _next = next;
         _dataService = dataService;
@@ -15,15 +15,11 @@ public class AuthMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
-        if (!context.Request.Headers.TryGetValue("Authorization", out var token) || token != "Bearer demo-token-compA")
+        // Only set CompanyId if token is valid; otherwise, proceed without it
+        if (context.Request.Headers.TryGetValue("Authorization", out var token) && token == "Bearer demo-token-compA")
         {
-            context.Response.StatusCode = 401;
-            await context.Response.WriteAsync("Unauthorized");
-            return;
+            context.Items["CompanyId"] = "compA";
         }
-
-        context.Items["CompanyId"] = "compA";
-
         await _next(context);
     }
 }

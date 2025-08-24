@@ -1,5 +1,5 @@
-﻿using InvoiceSystem;
-using InvoiceSystem.Models;
+﻿using InvoiceSystem.Models;
+using InvoicingSystem.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InvoicingSystem.Controllers;
@@ -8,9 +8,9 @@ namespace InvoicingSystem.Controllers;
 [Route("[controller]")]
 public class InvoiceController : ControllerBase
 {
-    private readonly InMemoryDataService _dataService;
+    private readonly IDataService _dataService;
 
-    public InvoiceController(InMemoryDataService dataService)
+    public InvoiceController(IDataService dataService)
     {
         _dataService = dataService;
     }
@@ -24,16 +24,21 @@ public class InvoiceController : ControllerBase
         if (string.IsNullOrEmpty(invoice.InvoiceId) || string.IsNullOrEmpty(invoice.CompanyId) || invoice.CompanyId != companyId)
             return BadRequest("Invalid invoice data");
 
-        _dataService.AddInvoice(invoice);
-        return Created($"/invoice/{invoice.InvoiceId}", invoice);
+        try
+        {
+            _dataService.AddInvoice(invoice);
+            return Created($"/invoice/{invoice.InvoiceId}", invoice);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message); 
+        }
     }
 
     [HttpGet("sent")]
     public IActionResult GetSentInvoices([FromQuery] string? counter_party_company, [FromQuery] string? date_issued, [FromQuery] string? invoice_id)
     {
-        var companyId = HttpContext.Items["CompanyId"]?.ToString();
-        if (string.IsNullOrEmpty(companyId)) return Unauthorized();
-
+        var companyId = HttpContext.Items["CompanyId"]?.ToString() ?? "compA"; // we pass a default value of companyId
         var invoices = _dataService.GetSentInvoices(companyId, counter_party_company, date_issued, invoice_id);
         return Ok(invoices);
     }
@@ -41,9 +46,7 @@ public class InvoiceController : ControllerBase
     [HttpGet("received")]
     public IActionResult GetReceivedInvoices([FromQuery] string? counter_party_company, [FromQuery] string? date_issued, [FromQuery] string? invoice_id)
     {
-        var companyId = HttpContext.Items["CompanyId"]?.ToString();
-        if (string.IsNullOrEmpty(companyId)) return Unauthorized();
-
+        var companyId = HttpContext.Items["CompanyId"]?.ToString() ?? "compA"; // we pass a default value of companyId
         var invoices = _dataService.GetReceivedInvoices(companyId, counter_party_company, date_issued, invoice_id);
         return Ok(invoices);
     }
