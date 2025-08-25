@@ -2,8 +2,8 @@
 
 ## Setup
 - 1) Install .NET SDK 8.0 from the following site: [https://dotnet.microsoft.com/download/dotnet/8.0](https://dotnet.microsoft.com/download/dotnet/8.0).
-- 2) Navigate to the `InvoiceSystem\InvoiceSystem` directory and run `dotnet restore` to restore dependencies.
-- 3) From the same directory, run `dotnet run` to start the application.
+- 2) Navigate to the `InvoiceSystem` directory and run `dotnet restore` to restore dependencies.
+- 3) Navigate to the next folder `InvoiceSystem` (`InvoiceSystem/InvoiceSystem`), run `dotnet run` to start the application.
 - 4) The endpoints are visible via swagger at the url `http://localhost:5235/swagger`.
 
 ## Endpoints
@@ -32,7 +32,7 @@
        "counterPartyCompanyId": "compB"
      }
 
-## Tests
+## Unit Tests
 - 1) Navigate to the `InvoiceSystem\InvoicingSystem.Test` directory
 - 2) Run `dotnet test` to execute unit tests.
 
