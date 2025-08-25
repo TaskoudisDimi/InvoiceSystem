@@ -2,7 +2,7 @@
 {
     public class Invoice
     {
-        public string InvoiceId { get; set; } = string.Empty;
+        public required string InvoiceId { get; set; }
         public string DateIssued { get; set; } = string.Empty; 
         public float NetAmount { get; set; }
         public float VatAmount { get; set; }

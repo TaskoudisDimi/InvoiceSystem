@@ -68,7 +68,9 @@ public class InvoiceControllerTests
 
         Assert.NotNull(result);
         Assert.Equal(400, result?.StatusCode);
-        Assert.Contains("already exists", result?.Value.ToString());
+        var value = result?.Value as string; 
+        Assert.NotNull(value); 
+        Assert.Contains("already exists", value); 
     }
 
     [Fact]
