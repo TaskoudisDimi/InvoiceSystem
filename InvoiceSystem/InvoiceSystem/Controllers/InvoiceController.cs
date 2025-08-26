@@ -15,6 +15,7 @@ public class InvoiceController : ControllerBase
         _dataService = dataService;
     }
 
+    // create a new invoice
     [HttpPost]
     public IActionResult CreateInvoice([FromBody] Invoice invoice)
     {
@@ -35,18 +36,20 @@ public class InvoiceController : ControllerBase
         }
     }
 
+    // get sent invoices with optional filters
     [HttpGet("sent")]
     public IActionResult GetSentInvoices([FromQuery] string? counter_party_company, [FromQuery] string? date_issued, [FromQuery] string? invoice_id)
     {
-        var companyId = HttpContext.Items["CompanyId"]?.ToString() ?? "compA"; // Default to compA if unauthenticated
+        var companyId = HttpContext.Items["CompanyId"]?.ToString() ?? "compA"; 
         var invoices = _dataService.GetSentInvoices(companyId, counter_party_company, date_issued, invoice_id);
         return Ok(invoices);
     }
 
+    // get received invoices with optional filters
     [HttpGet("received")]
     public IActionResult GetReceivedInvoices([FromQuery] string? counter_party_company, [FromQuery] string? date_issued, [FromQuery] string? invoice_id)
     {
-        var companyId = HttpContext.Items["CompanyId"]?.ToString() ?? "compA"; // Default to compA if unauthenticated
+        var companyId = HttpContext.Items["CompanyId"]?.ToString() ?? "compA"; 
         var invoices = _dataService.GetReceivedInvoices(companyId, counter_party_company, date_issued, invoice_id);
         return Ok(invoices);
     }

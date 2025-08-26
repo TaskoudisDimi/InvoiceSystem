@@ -12,6 +12,7 @@
 - GET /invoice/received?counter_party_company=compA&date_issued=2025-08-21T00:00:00Z&invoice_id=inv1
 
 ## Testing
+**Testing POST /invoice:**
 - Hardcoded auth token (`Bearer demo-token-compA`) for demo purposes.
 - Test the API using Swagger with the following steps:
   1. Open the Swagger UI at `http://localhost:5235/swagger` after running the application (follow Setup steps 1-3).
@@ -31,6 +32,25 @@
        "companyId": "compA",
        "counterPartyCompanyId": "compB"
      }
+ 7. Click "Execute" to send the request. Expected Result: If successful, you should receive a 201 Created response with the new invoice location.
+ 8. Duplicate Check: Execute the same request again with the same invoiceId ("inv5"). You should receive a 400 Bad Request response with the message "Invoice with ID 'inv5' already exists" to confirm duplicate handling.
+ 9. Unauthorized Test: Log out (click "Authorize" and log out), then retry. Expected Result: 401 Unauthorized.
+
+**Testing GET /invoice/sent**
+ 1. Open the Swagger UI at http://localhost:5235/swagger after running the application.
+ 2. Navigate to the GET /invoice/sent endpoint.
+ 3. Click "Try it out" to enable the query parameters.
+ 4. Enter optional filters (e.g., counter_party_company = "compB", date_issued = "2025-08-21T00:00:00Z", invoice_id = "inv1").
+ 5. Click "Execute" to send the request. Expected Result: 200 OK response with an array of matching sent invoices (e.g., ["inv1"] if filtered).
+ 6. Test without filters: Leave all fields blank. Expected Result: 200 OK with all sent invoices.
+
+**Testing GET /invoice/received:**
+ 1. Open the Swagger UI at http://localhost:5235/swagger after running the application.
+ 2. Navigate to the GET /invoice/received endpoint.
+ 3. Click "Try it out" to enable the query parameters.
+ 4. Enter optional filters (e.g., counter_party_company = "compB", date_issued = "2025-08-22T00:00:00Z", invoice_id = "inv2").
+ 5. Click "Execute" to send the request. Expected Result: 200 OK response with an array of matching received invoices (e.g., ["inv2"] if filtered).
+ 6. Test without filters: Leave all fields blank. Expected Result: 200 OK with all received invoices.
 
 ## Unit Tests
 - 1) Navigate to the `InvoiceSystem\InvoicingSystem.Test` directory

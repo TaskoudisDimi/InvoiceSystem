@@ -17,6 +17,7 @@ public class InMemoryDataService : IDataService
         return _companies.FirstOrDefault(c => c.Id == id);
     }
 
+    // Adds a new invoice, ensuring no duplicate InvoiceId exists
     public void AddInvoice(Invoice invoice)
     {
         if (_invoices.Any(i => i.InvoiceId == invoice.InvoiceId))
@@ -26,6 +27,7 @@ public class InMemoryDataService : IDataService
         _invoices.Add(invoice);
     }
 
+    // Retrieves sent invoices with optional filtering
     public IEnumerable<Invoice> GetSentInvoices(string companyId, string? counterParty = null, string? dateIssued = null, string? invoiceId = null)
     {
         var query = _invoices.Where(i => i.CompanyId == companyId);
@@ -35,6 +37,7 @@ public class InMemoryDataService : IDataService
         return query;
     }
 
+    // Retrieves received invoices with optional filtering
     public IEnumerable<Invoice> GetReceivedInvoices(string companyId, string? counterParty = null, string? dateIssued = null, string? invoiceId = null)
     {
         var query = _invoices.Where(i => i.CounterPartyCompanyId == companyId);
@@ -44,6 +47,7 @@ public class InMemoryDataService : IDataService
         return query;
     }
 
+    // Seeds initial data for testing
     public void SeedData()
     {
         var companyA = new Company { Id = "compA", Name = "Company A", Users = new List<string> { "user1" } };
